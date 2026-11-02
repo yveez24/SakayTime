@@ -8,6 +8,8 @@ const db = new sqlite3.Database(dbPath, (err) => {
         console.error('Database connection failed:', err.message);
     } else {
         console.log('Connected to SakayTime database!');
+
+        db.run('PRAGMA foreign_keys = ON');
     }
 });
 
