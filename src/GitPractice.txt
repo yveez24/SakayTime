@@ -1,5 +1,0 @@
-SakayTime GitHub Collaboration Test
-
-This is my first practice commit.
-Repository Owner: yveez24
-Branch: test-github-workflow
