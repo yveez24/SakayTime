@@ -4,6 +4,9 @@ const cors = require('cors');
 require('dotenv').config();
 
 const db = require('./config/database');
+const apiRoutes = require('./routes');
+const notFoundMiddleware = require('./middleware/notFoundMiddleware');
+const errorMiddleware = require('./middleware/errorMiddleware');
 
 const app = express();
 
@@ -12,23 +15,15 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Basic test route
-app.get('/api/test', (req, res) => {
-    res.json({
-        success: true,
-        message: 'SakayTime API is running!'
-    });
-});
+// API Routes
+app.use('/api', apiRoutes);
 
 // Database test route
-app.get('/api/db-test', (req, res) => {
+app.get('/api/db-test', (req, res, next) => {
     db.get('SELECT 1 AS result', [], (err, row) => {
         if (err) {
-            return res.status(500).json({
-                success: false,
-                message: 'Database connection failed.',
-                error: err.message
-            });
+            err.statusCode = 500;
+            return next(err);
         }
 
         res.json({
@@ -38,6 +33,12 @@ app.get('/api/db-test', (req, res) => {
         });
     });
 });
+
+// Handle unknown routes
+app.use(notFoundMiddleware);
+
+// Handle other errors
+app.use(errorMiddleware);
 
 // Server configuration
 const PORT = process.env.PORT || 5000;
