@@ -1,4 +1,6 @@
+
 const express = require('express');
+const authRoutes = require('./authRoutes');
 
 const router = express.Router();
 
@@ -9,5 +11,8 @@ router.get('/test', (req, res) => {
         message: 'SakayTime API is running!'
     });
 });
+
+// Authentication routes
+router.use('/auth', authRoutes);
 
 module.exports = router;
