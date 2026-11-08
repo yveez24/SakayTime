@@ -1,8 +1,11 @@
+
 const express = require('express');
+
 const {
     register,
     login,
-    getCurrentUser
+    getCurrentUser,
+    updateCurrentUser
 } = require('../controllers/authController');
 
 const authMiddleware = require('../middleware/authMiddleware');
@@ -17,5 +20,8 @@ router.post('/login', login);
 
 // Get the currently authenticated user's profile
 router.get('/me', authMiddleware, getCurrentUser);
+
+// Update the currently authenticated user's profile
+router.put('/me', authMiddleware, updateCurrentUser);
 
 module.exports = router;
