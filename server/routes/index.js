@@ -1,6 +1,7 @@
 
 const express = require('express');
 const authRoutes = require('./authRoutes');
+const transportationRoutes = require('./transportationRoutes');
 
 const router = express.Router();
 
@@ -14,5 +15,8 @@ router.get('/test', (req, res) => {
 
 // Authentication routes
 router.use('/auth', authRoutes);
+
+// Transportation routes
+router.use('/transportation', transportationRoutes);
 
 module.exports = router;
