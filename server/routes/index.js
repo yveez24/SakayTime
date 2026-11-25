@@ -1,6 +1,8 @@
+
 const express = require('express');
 const authRoutes = require('./authRoutes');
 const transportationRoutes = require('./transportationRoutes');
+const favoritesRoutes = require('./favoritesRoutes');
 
 const router = express.Router();
 
@@ -17,5 +19,8 @@ router.use('/auth', authRoutes);
 
 // Transportation routes
 router.use('/transportation', transportationRoutes);
+
+// Favorites routes
+router.use('/favorites', favoritesRoutes);
 
 module.exports = router;
