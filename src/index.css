@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body { margin: 0; background: #f3f7fc; color: #172f4f; font-family: 'DM Sans', sans-serif; -webkit-font-smoothing: antialiased; }
@@ -20,3 +21,123 @@ button { cursor: pointer; }
 
 
  /* admin/
+=======
+.routes-page {
+  width: min(1180px, calc(100% - 48px));
+  margin: 28px auto;
+  padding: 28px 30px;
+  overflow: hidden;
+  border: 1px solid #dfe7f2;
+  border-radius: 20px;
+  color: #26364a;
+  background: #fff;
+  box-shadow: 0 12px 35px rgba(36, 57, 41, 0.06);
+}
+
+.routes-page h2 {
+  margin: 0 0 22px;
+  color: #26364a;
+  font-size: clamp(22px, 3vw, 28px);
+  font-weight: 750;
+  letter-spacing: -0.7px;
+}
+
+.routes-search {
+  margin-bottom: 20px;
+}
+
+.routes-search input {
+  width: min(100%, 420px);
+  min-height: 42px;
+  padding: 9px 13px;
+  border: 1px solid #dce5f1;
+  border-radius: 10px;
+  color: #26364a;
+  background: #fff;
+  font: inherit;
+  font-size: 14px;
+}
+
+.routes-search input::placeholder {
+  color: #929eaf;
+}
+
+.routes-search input:focus-visible {
+  outline: 3px solid rgba(61, 110, 178, 0.28);
+  outline-offset: 2px;
+}
+
+.routes-table-wrap {
+  overflow-x: auto;
+}
+
+.routes-table {
+  width: 100%;
+  border: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  text-align: left;
+  font-size: 14px;
+}
+
+.routes-table thead {
+  color: #68778b;
+  background: #f1f5fb;
+}
+
+.routes-table th {
+  padding: 13px 15px;
+  border-top: 1px solid #e3eaf3;
+  border-bottom: 1px solid #e3eaf3;
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.routes-table th:first-child {
+  border-left: 1px solid #e3eaf3;
+  border-top-left-radius: 10px;
+}
+
+.routes-table th:last-child {
+  border-right: 1px solid #e3eaf3;
+  border-top-right-radius: 10px;
+}
+
+.routes-table td {
+  padding: 15px;
+  border-bottom: 1px solid #e9eef5;
+  color: #5d6879;
+  vertical-align: top;
+}
+
+.routes-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.routes-table tbody tr:hover {
+  background: #f8faff;
+}
+
+.routes-table td strong {
+  color: #26364a;
+  font-weight: 680;
+}
+
+.routes-endpoints {
+  margin-top: 4px;
+  color: #7b8799;
+  line-height: 1.5;
+}
+
+@media (max-width: 700px) {
+  .routes-page {
+    width: calc(100% - 28px);
+    margin: 20px auto;
+    padding: 22px 18px;
+    border-radius: 15px;
+  }
+}
+>>>>>>> f3d1e8c (Update routes page and add DataTable)
