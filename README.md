@@ -20,11 +20,14 @@ SakayTime is a transportation information system designed to help commuters acce
 
 ## Project Structure
 
-- `public/` - Static assets and HTML template
-- `src/` - React components and pages
+- `index.html` - Vite HTML entry point
+- `src/index.js` - React application entry point
+- `src/App.js` - SakayTime homepage
+- `src/components/auth/` - Login, signup, session API module, and auth styles
+- `public/` - Static assets
+- `dist/` - Production frontend build output
 - `server/` - Backend and API
 - `database/` - SQLite database and SQL schema
-- `docs/` - Project documentation
 
 ## Installation
 
@@ -34,7 +37,14 @@ SakayTime is a transportation information system designed to help commuters acce
    npm install
 
 3. Configure your environment variables if needed.
-4. Start the application using the configured scripts.
+4. Copy `.env.example` to `.env` and set `JWT_SECRET` to a long, random value.
+5. Initialize the SQLite database with `npm run db:init`.
+6. For development, run the API with `npm start` and the frontend with `npm run dev` in separate terminals. Open the Vite URL shown in the terminal (usually `http://localhost:5173`).
+7. For production, run `npm run build` and then `npm start`; open `http://localhost:5000`.
+
+## Accounts
+
+The homepage supports commuter registration, login, and logout through the existing `/api/auth/register`, `/api/auth/login`, and `/api/auth/me` endpoints. Passwords must be at least 8 characters. Login sessions are kept in the current browser tab and cleared when you log out.
 
 ## Developers
 
