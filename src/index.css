@@ -13,3 +13,10 @@ button { cursor: pointer; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
 }
+ 
+ /* register //
+
+ /* staff/
+
+
+ /* admin/
