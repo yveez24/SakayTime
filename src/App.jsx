@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import AuthDialog from './components/auth/AuthDialog';
 import { getCurrentUser } from './components/auth/authApi';
 

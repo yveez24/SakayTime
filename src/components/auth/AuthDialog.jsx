@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
-import { loginUser, registerUser } from './authApi';
-import './AuthDialog.css';
+import React, { useEffect, useState } from 'react';
+import { loginUser, registerUser } from './authApi.jsx';
 
 function AuthDialog({ mode, onClose, onModeChange, onSuccess }) {
   const [error, setError] = useState('');
