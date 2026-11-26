@@ -1,7 +1,7 @@
 import React from 'react';
-import StaffDashboard from '../staff/StaffDashboard';
-import AssignedRoutes from '../staff/AssignedRoutes';
-import TripUpdates from '../staff/TripUpdates';
+import StaffDashboard from './staff/StaffDashboard';
+import AssignedRoutes from './staff/AssignedRoutes';
+import TripUpdates from './staff/TripUpdates';
 import AdminDashboard from './admin/AdminDashboard';
 import ManageAnnouncements from './admin/ManageAnnouncements';
 import ManageUsers from './admin/ManageUsers';
@@ -30,72 +30,89 @@ const navItems = [
 export default function App() {
   const [activeView, setActiveView] = React.useState('Staff Dashboard');
 
-  const views = {
-    'Assigned Routes': <AssignedRoutes />,
-    'Trip Updates': <TripUpdates />,
-    'Announcements': <ManageAnnouncements />,
-    'User Management': <ManageUsers />,
-    'Route Management': <ManageRoutes />,
-    'Schedule Management': <ManageSchedules />,
-    'Assignment Management': <ManageAssignments />,
-    'Terminal Management': <ManageTerminals />,
-    'Town Management': <ManageTowns />,
-    'Vehicle Management': <ManageVehicles />,
-  };
-
   const renderMainContent = () => {
+    if (activeView === 'Assigned Routes') {
+      return React.createElement('main', { className: 'workspace' }, React.createElement('div', { style: { width: '100%' } }, React.createElement(AssignedRoutes)));
+    }
+
+    if (activeView === 'Trip Updates') {
+      return React.createElement('main', { className: 'workspace' }, React.createElement('div', { style: { width: '100%' } }, React.createElement(TripUpdates)));
+    }
+
+    if (activeView === 'Announcements') {
+      return React.createElement('main', { className: 'workspace' }, React.createElement('div', { style: { width: '100%' } }, React.createElement(ManageAnnouncements)));
+    }
+
+    if (activeView === 'User Management') {
+      return React.createElement('main', { className: 'workspace' }, React.createElement('div', { style: { width: '100%' } }, React.createElement(ManageUsers)));
+    }
+
+    if (activeView === 'Route Management') {
+      return React.createElement('main', { className: 'workspace' }, React.createElement('div', { style: { width: '100%' } }, React.createElement(ManageRoutes)));
+    }
+
+    if (activeView === 'Schedule Management') {
+      return React.createElement('main', { className: 'workspace' }, React.createElement('div', { style: { width: '100%' } }, React.createElement(ManageSchedules)));
+    }
+
+    if (activeView === 'Assignment Management') {
+      return React.createElement('main', { className: 'workspace' }, React.createElement('div', { style: { width: '100%' } }, React.createElement(ManageAssignments)));
+    }
+
+    if (activeView === 'Terminal Management') {
+      return React.createElement('main', { className: 'workspace' }, React.createElement('div', { style: { width: '100%' } }, React.createElement(ManageTerminals)));
+    }
+
+    if (activeView === 'Town Management') {
+      return React.createElement('main', { className: 'workspace' }, React.createElement('div', { style: { width: '100%' } }, React.createElement(ManageTowns)));
+    }
+
+    if (activeView === 'Vehicle Management') {
+      return React.createElement('main', { className: 'workspace' }, React.createElement('div', { style: { width: '100%' } }, React.createElement(ManageVehicles)));
+    }
+
     if (activeView === 'Logout') {
-      return (
-        <main className="workspace">
-          <div style={{ width: '100%' }}>
-            <section className="panel">
-              <h3 className="page-title">Logged out</h3>
-            </section>
-          </div>
-        </main>
-      );
+      return React.createElement('main', { className: 'workspace' }, React.createElement('div', { style: { width: '100%' } }, React.createElement('section', { className: 'panel' }, React.createElement('h3', { className: 'page-title' }, 'Logged out'))));
     }
 
-    if (views[activeView]) {
-      return (
-        <main className="workspace">
-          <div style={{ width: '100%' }}>{views[activeView]}</div>
-        </main>
-      );
-    }
-
-    return (
-      <main className="workspace">
-        <StaffDashboard />
-        <AdminDashboard />
-      </main>
+    return React.createElement(
+      'main',
+      { className: 'workspace' },
+      React.createElement(StaffDashboard),
+      React.createElement(AdminDashboard)
     );
   };
 
-  return (
-    <div className="shell">
-      <aside className="sidebar">
-        <div className="brand-block">
-          <div className="bus-mark">🚌</div>
-          <div className="brand-name">SakayTime</div>
-        </div>
-        <nav className="nav">
-          {navItems.map((item) => (
-            <button
-              key={item.label}
-              className={`nav-item ${
-                activeView === item.label ? 'active' : ''
-              }`}
-              onClick={() => setActiveView(item.label)}
-              type="button"
-            >
-              <span className="nav-icon">{item.icon}</span>
-              {item.label}
-            </button>
-          ))}
-        </nav>
-      </aside>
-      {renderMainContent()}
-    </div>
+  return React.createElement(
+    'div',
+    { className: 'shell' },
+    React.createElement(
+      'aside',
+      { className: 'sidebar' },
+      React.createElement(
+        'div',
+        { className: 'brand-block' },
+        React.createElement('div', { className: 'bus-mark' }, '🚌'),
+        React.createElement('div', { className: 'brand-name' }, 'SakayTime')
+      ),
+      React.createElement(
+        'nav',
+        { className: 'nav' },
+        navItems.map((item) =>
+          React.createElement(
+            'button',
+            {
+              key: item.label,
+              className: `nav-item ${activeView === item.label ? 'active' : ''}`,
+              onClick: () => setActiveView(item.label),
+              type: 'button',
+            },
+            React.createElement('span', { className: 'nav-icon' }, item.icon),
+            item.label
+          )
+        )
+      )
+    ),
+    renderMainContent()
   );
 }
