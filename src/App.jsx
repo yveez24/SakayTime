@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import AuthDialog from './components/auth/AuthDialog';
 import { getCurrentUser } from './components/auth/authApi';
-import './Home.css';
 
 const SESSION_KEY = 'sakaytime.session';
 
@@ -99,17 +98,17 @@ function App() {
 				<section className="hero-banner" aria-labelledby="hero-title">
 					<div className="hero-shade" />
 					<div className="hero-inner">
-						<p className="hero-kicker"><span className="hero-kicker-dot" /> ILOILO CITY &amp; PROVINCE</p>
+						<p className="hero-kicker"><span className="hero-kicker-dot" /> AKLAN &amp; PROVINCE</p>
 						<h1 id="hero-title">SakayTime</h1>
 						<h2>Ride Smart. Travel On Time.</h2>
-						<p className="hero-description">Check schedules, view routes, and plan your trip with ease across Iloilo Province.</p>
+						<p className="hero-description">Check schedules, view routes, and plan your trip with ease across Aklan Province.</p>
 						<form className="hero-search" onSubmit={handleTripSearch} role="search">
 							<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8" stroke="currentColor" strokeWidth="1.8"/><path d="m16 16 4.5 4.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
 							<input name="destination" type="search" placeholder="Search routes, towns, or terminals..." aria-label="Search routes, towns, or terminals" />
 							<button className="button" type="submit">Search</button>
 						</form>
 					</div>
-					<div className="hero-photo-credit">Explore Iloilo with SakayTime</div>
+					<div className="hero-photo-credit">Explore Aklan with SakayTime</div>
 				</section>
 
 				<section className="quick-actions content-width" aria-label="Quick links">
@@ -121,16 +120,16 @@ function App() {
 
 				<div className="content-width home-content">
 					<section id="routes" className="routes-section" aria-labelledby="routes-title">
-						<div className="section-heading"><div><p className="section-eyebrow">GET THERE EASIER</p><h2 id="routes-title">Popular routes</h2><p>Find a ride to some of Iloilo's most-traveled destinations.</p></div><a className="view-all" href="#routes">View all routes <span>→</span></a></div>
+						<div className="section-heading"><div><p className="section-eyebrow">GET THERE EASIER</p><h2 id="routes-title">Popular routes</h2><p>Find a ride to some of Aklan's most-traveled destinations.</p></div><a className="view-all" href="#routes">View all routes <span>→</span></a></div>
 						<div className="route-grid">
 							{[
-								{ destination: 'Passi', type: 'Bus', duration: '2 hr 00 min', color: 'blue' },
-								{ destination: 'Oton', type: 'Van', duration: '30 min', color: 'orange' },
-								{ destination: 'Miagao', type: 'Bus', duration: '1 hr 30 min', color: 'blue' }
+								{ origin: 'Caticlan Jetty Port', destination: 'Tabon', type: 'Bus', duration: '45 min', color: 'blue' },
+								{ origin: 'Kalibo Terminal', destination: 'Caticlan Jetty Port', type: 'Bus', duration: '1 hr 30 min', color: 'orange' },
+								{ origin: 'Nabas Highway Stop', destination: 'Malay Proper', type: 'Van', duration: '30 min', color: 'blue' }
 							].map((route) => (
 								<article className="route-card" key={route.destination}>
 									<div className={`route-visual ${route.color}`}><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 18.5V6.8C5 5.8 5.8 5 6.8 5h10.4c1 0 1.8.8 1.8 1.8v11.7M5 14h14M8 18.5v1m8-1v1M8.2 9h.1m7.4 0h.1" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/><path d="M7 5l1-2m9 2-1-2" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/></svg></div>
-									<div className="route-info"><div className="route-title-row"><h3>Iloilo City <span>→</span> {route.destination}</h3><button className={`favorite-button${savedRoutes.includes(route.destination) ? ' saved' : ''}`} type="button" onClick={() => toggleFavorite(route.destination)} aria-label={`${savedRoutes.includes(route.destination) ? 'Remove' : 'Save'} Iloilo City to ${route.destination} route`}>{savedRoutes.includes(route.destination) ? '★' : '☆'}</button></div><span className={`route-type ${route.color}`}>{route.type}</span><div className="route-duration"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="8.5" stroke="currentColor" strokeWidth="1.7"/><path d="M12 7v5l3 2" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/></svg>{route.duration} estimated</div><div className="route-from"><span>●</span> Iloilo City <span>→</span> {route.destination}</div></div>
+									<div className="route-info"><div className="route-title-row"><h3>{route.origin} <span>→</span> {route.destination}</h3><button className={`favorite-button${savedRoutes.includes(route.destination) ? ' saved' : ''}`} type="button" onClick={() => toggleFavorite(route.destination)} aria-label={`${savedRoutes.includes(route.destination) ? 'Remove' : 'Save'} ${route.origin} to ${route.destination} route`}>{savedRoutes.includes(route.destination) ? '★' : '☆'}</button></div><span className={`route-type ${route.color}`}>{route.type}</span><div className="route-duration"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="8.5" stroke="currentColor" strokeWidth="1.7"/><path d="M12 7v5l3 2" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/></svg>{route.duration} estimated</div><div className="route-from"><span>●</span> {route.origin} <span>→</span> {route.destination}</div></div>
 									<button className="route-view-button" type="button" onClick={() => setToast(`Route details for ${route.destination} are coming soon.`)}>View Details</button>
 								</article>
 							))}
@@ -138,10 +137,10 @@ function App() {
 					</section>
 
 					<section className="info-grid" aria-label="Travel information">
-						<article className="info-panel" id="schedules"><div className="panel-heading"><span className="panel-icon"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="currentColor" strokeWidth="1.8"/><path d="M12 7v5l3.5 2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg></span><div><h2>Next departures</h2><p>Schedule previews</p></div></div><div className="departure-row"><span><strong>Iloilo City → Passi</strong><small>Bus service</small></span><time>08:00 AM</time></div><div className="departure-row"><span><strong>Iloilo City → Oton</strong><small>Van service</small></span><time>08:30 AM</time></div><a className="panel-link" href="#routes">Browse routes <span>→</span></a></article>
-						<article className="info-panel announcement-panel" id="announcements"><div className="panel-heading"><span className="panel-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 14V9a1 1 0 0 1 1-1h3l8-4v15l-8-4H5a1 1 0 0 1-1-1Zm4 1 1.5 5H13l-2-6m8-7a6 6 0 0 1 0 8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg></span><div><h2>Announcements</h2><p>Updates for your journey</p></div></div><div className="announcement-empty"><span className="announcement-dot"/><div><strong>Travel smart around Iloilo</strong><p>Check back here for service updates and important travel notices.</p></div></div><a className="panel-link" href="#about">About SakayTime <span>→</span></a></article>
+						<article className="info-panel" id="schedules"><div className="panel-heading"><span className="panel-icon"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="currentColor" strokeWidth="1.8"/><path d="M12 7v5l3.5 2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg></span><div><h2>Next departures</h2><p>Schedule previews</p></div></div><div className="departure-row"><span><strong>Kalibo Terminal → Caticlan Jetty Port</strong><small>Bus service</small></span><time>08:00 AM</time></div><div className="departure-row"><span><strong>Caticlan Jetty Port → Tabon</strong><small>Bus service</small></span><time>08:30 AM</time></div><a className="panel-link" href="#routes">Browse routes <span>→</span></a></article>
+						<article className="info-panel announcement-panel" id="announcements"><div className="panel-heading"><span className="panel-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 14V9a1 1 0 0 1 1-1h3l8-4v15l-8-4H5a1 1 0 0 1-1-1Zm4 1 1.5 5H13l-2-6m8-7a6 6 0 0 1 0 8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg></span><div><h2>Announcements</h2><p>Updates for your journey</p></div></div><div className="announcement-empty"><span className="announcement-dot"/><div><strong>Travel smart around Aklan</strong><p>Check back here for service updates and important travel notices.</p></div></div><a className="panel-link" href="#about">About SakayTime <span>→</span></a></article>
 					</section>
-					<section className="about-strip" id="about"><div className="about-mark">S</div><div><h2>Made for the way Iloilo moves.</h2><p>SakayTime brings routes, schedules, terminals, and travel updates together in one place.</p></div><span className="about-decoration" aria-hidden="true">SakayTime · Iloilo · SakayTime · Iloilo ·</span></section>
+					<section className="about-strip" id="about"><div className="about-mark">S</div><div><h2>Made for the way Aklan moves.</h2><p>SakayTime brings routes, schedules, terminals, and travel updates together in one place.</p></div><span className="about-decoration" aria-hidden="true">SakayTime · Aklan · SakayTime · Aklan ·</span></section>
 				</div>
 			</main>
 			<footer className="site-footer"><div className="content-width footer-inner"><a className="footer-brand" href="#home">SakayTime</a><span>Ride smart. Travel on time.</span><span>© {new Date().getFullYear()} SakayTime</span></div></footer>

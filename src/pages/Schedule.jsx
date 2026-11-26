@@ -40,19 +40,10 @@ export default function Schedule() {
       <h2>SakayTime — Schedule</h2>
 
       <div style={{ marginBottom: "16px" }}>
-        <label htmlFor="townFilter" style={{ marginRight: "8px" }}>
-          Town:
-        </label>
-        <select
-          id="townFilter"
-          value={selectedTown}
-          onChange={(e) => setSelectedTown(e.target.value)}
-        >
-          {towns.map((town) => (
-            <option key={town} value={town}>
-              {town}
-            </option>
-          ))}
+?
+        <label htmlFor="townFilter" style={{ marginRight: "8px" }}>Town:</label>
+        <select id="townFilter" value={selectedTown} onChange={(e) => setSelectedTown(e.target.value)}>
+          {towns.map((town) => <option key={town} value={town}>{town}</option>)}
         </select>
       </div>
 

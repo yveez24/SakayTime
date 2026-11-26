@@ -45,19 +45,9 @@ export default function Vehicle() {
       <h2>SakayTime — Vehicles</h2>
 
       <div style={{ marginBottom: "16px" }}>
-        <label htmlFor="vehicleTypeFilter" style={{ marginRight: "8px" }}>
-          Filter by Type:
-        </label>
-        <select
-          id="vehicleTypeFilter"
-          value={selectedType}
-          onChange={(e) => setSelectedType(e.target.value)}
-        >
-          {vehicleTypes.map((type) => (
-            <option key={type} value={type}>
-              {type}
-            </option>
-          ))}
+        <label htmlFor="vehicleTypeFilter" style={{ marginRight: "8px" }}>Filter by Type:</label>
+        <select id="vehicleTypeFilter" value={selectedType} onChange={(e) => setSelectedType(e.target.value)}>
+          {vehicleTypes.map((type) => <option key={type} value={type}>{type}</option>)}
         </select>
       </div>
 
