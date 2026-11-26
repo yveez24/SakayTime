@@ -2,6 +2,9 @@
 const express = require('express');
 
 const {
+    getSchedules,
+    getScheduleById,
+    createSchedule,
     getTowns,
     getTerminals,
     getRoutes,
@@ -27,11 +30,21 @@ const authorizeRoles = require('../middleware/authorizeRoles');
 const router = express.Router();
 
 // Public transportation endpoints
+router.get('/schedules', getSchedules);
+router.get('/schedules/:id', getScheduleById);
 router.get('/towns', getTowns);
 router.get('/terminals', getTerminals);
 router.get('/routes', getRoutes);
 router.get('/routes/:id', getRouteById);
 router.get('/vehicles', getVehicles);
+
+// Admin: Create a new schedule
+router.post(
+    '/schedules',
+    authMiddleware,
+    authorizeRoles('admin'),
+    createSchedule
+);
 
 // Admin: Create a new vehicle
 router.post(

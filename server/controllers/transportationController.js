@@ -2,6 +2,316 @@
 const db = require('../config/database');
 const { successResponse, errorResponse } = require('../utils/response');
 
+
+// Get all schedules with route, vehicle, and operating days
+const getSchedules = (req, res, next) => {
+    const query = `
+        SELECT
+            s.id,
+            s.route_id,
+            r.route_name,
+            r.transport_type,
+            r.estimated_duration,
+            s.vehicle_id,
+            v.plate_number,
+            v.capacity,
+            s.departure_time,
+            s.arrival_time,
+            s.status
+        FROM schedules s
+        JOIN routes r ON s.route_id = r.id
+        JOIN vehicles v ON s.vehicle_id = v.id
+        ORDER BY s.departure_time
+    `;
+
+    db.all(query, [], (err, schedules) => {
+        if (err) return next(err);
+
+        const daysQuery = `
+            SELECT schedule_id, day_of_week
+            FROM schedule_days
+            ORDER BY id
+        `;
+
+        db.all(daysQuery, [], (daysError, days) => {
+            if (daysError) return next(daysError);
+
+            const schedulesWithDays = schedules.map(schedule => ({
+                ...schedule,
+                operating_days: days
+                    .filter(day => day.schedule_id === schedule.id)
+                    .map(day => day.day_of_week)
+            }));
+
+            return successResponse(
+                res,
+                'Schedules retrieved successfully.',
+                schedulesWithDays
+            );
+        });
+    });
+};
+
+
+// Get one schedule with its operating days
+const getScheduleById = (req, res, next) => {
+    const scheduleId = Number(req.params.id);
+
+    if (!Number.isInteger(scheduleId) || scheduleId <= 0) {
+        return errorResponse(res, 'Invalid schedule ID.', 400);
+    }
+
+    const query = `
+        SELECT
+            s.id,
+            s.route_id,
+            r.route_name,
+            r.transport_type,
+            r.estimated_duration,
+            s.vehicle_id,
+            v.plate_number,
+            v.capacity,
+            s.departure_time,
+            s.arrival_time,
+            s.status
+        FROM schedules s
+        JOIN routes r ON s.route_id = r.id
+        JOIN vehicles v ON s.vehicle_id = v.id
+        WHERE s.id = ?
+    `;
+
+    db.get(query, [scheduleId], (err, schedule) => {
+        if (err) return next(err);
+
+        if (!schedule) {
+            return errorResponse(res, 'Schedule not found.', 404);
+        }
+
+        db.all(
+            `SELECT day_of_week FROM schedule_days
+             WHERE schedule_id = ?
+             ORDER BY id`,
+            [scheduleId],
+            (daysError, days) => {
+                if (daysError) return next(daysError);
+
+                return successResponse(
+                    res,
+                    'Schedule retrieved successfully.',
+                    {
+                        ...schedule,
+                        operating_days: days.map(day => day.day_of_week)
+                    }
+                );
+            }
+        );
+    });
+};
+
+
+// Create a new schedule (Admin only)
+const createSchedule = (req, res, next) => {
+    const {
+        route_id,
+        vehicle_id,
+        departure_time,
+        arrival_time,
+        operating_days
+    } = req.body;
+
+    const routeId = Number(route_id);
+    const vehicleId = Number(vehicle_id);
+
+    const validDays = [
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday',
+        'Sunday'
+    ];
+
+    const timePattern = /^([01]\d|2[0-3]):[0-5]\d$/;
+
+    if (!Number.isInteger(routeId) || routeId <= 0) {
+        return errorResponse(res, 'A valid route ID is required.', 400);
+    }
+
+    if (!Number.isInteger(vehicleId) || vehicleId <= 0) {
+        return errorResponse(res, 'A valid vehicle ID is required.', 400);
+    }
+
+    if (!departure_time || !timePattern.test(departure_time)) {
+        return errorResponse(
+            res,
+            'A valid departure time in HH:MM format is required.',
+            400
+        );
+    }
+
+    if (
+        arrival_time !== undefined &&
+        arrival_time !== null &&
+        arrival_time !== '' &&
+        !timePattern.test(arrival_time)
+    ) {
+        return errorResponse(
+            res,
+            'Arrival time must use HH:MM format.',
+            400
+        );
+    }
+
+    if (
+        !Array.isArray(operating_days) ||
+        operating_days.length === 0
+    ) {
+        return errorResponse(
+            res,
+            'At least one operating day is required.',
+            400
+        );
+    }
+
+    if (
+        operating_days.some(day => !validDays.includes(day)) ||
+        new Set(operating_days).size !== operating_days.length
+    ) {
+        return errorResponse(
+            res,
+            'Operating days must be valid weekdays without duplicates.',
+            400
+        );
+    }
+
+    db.get(
+        `SELECT id FROM routes WHERE id = ? AND status = 'active'`,
+        [routeId],
+        (routeError, route) => {
+            if (routeError) return next(routeError);
+
+            if (!route) {
+                return errorResponse(
+                    res,
+                    'Route not found or inactive.',
+                    400
+                );
+            }
+
+            db.get(
+                `SELECT id FROM vehicles WHERE id = ? AND status = 'active'`,
+                [vehicleId],
+                (vehicleError, vehicle) => {
+                    if (vehicleError) return next(vehicleError);
+
+                    if (!vehicle) {
+                        return errorResponse(
+                            res,
+                            'Vehicle not found or inactive.',
+                            400
+                        );
+                    }
+
+                    db.run(
+                        'BEGIN IMMEDIATE TRANSACTION',
+                        beginError => {
+                            if (beginError) return next(beginError);
+
+                            const insertScheduleQuery = `
+                                INSERT INTO schedules (
+                                    route_id,
+                                    vehicle_id,
+                                    departure_time,
+                                    arrival_time,
+                                    status
+                                )
+                                VALUES (?, ?, ?, ?, 'scheduled')
+                            `;
+
+                            db.run(
+                                insertScheduleQuery,
+                                [
+                                    routeId,
+                                    vehicleId,
+                                    departure_time,
+                                    arrival_time || null
+                                ],
+                                function (insertError) {
+                                    if (insertError) {
+                                        return db.run(
+                                            'ROLLBACK',
+                                            () => next(insertError)
+                                        );
+                                    }
+
+                                    const scheduleId = this.lastID;
+                                    let currentDay = 0;
+
+                                    const insertNextDay = () => {
+                                        if (currentDay >= operating_days.length) {
+                                            return db.run(
+                                                'COMMIT',
+                                                commitError => {
+                                                    if (commitError) {
+                                                        return db.run(
+                                                            'ROLLBACK',
+                                                            () => next(commitError)
+                                                        );
+                                                    }
+
+                                                    return successResponse(
+                                                        res,
+                                                        'Schedule created successfully.',
+                                                        {
+                                                            id: scheduleId,
+                                                            route_id: routeId,
+                                                            vehicle_id: vehicleId,
+                                                            departure_time,
+                                                            arrival_time: arrival_time || null,
+                                                            status: 'scheduled',
+                                                            operating_days
+                                                        },
+                                                        201
+                                                    );
+                                                }
+                                            );
+                                        }
+
+                                        const day = operating_days[currentDay];
+
+                                        db.run(
+                                            `INSERT INTO schedule_days (
+                                                schedule_id,
+                                                day_of_week
+                                            ) VALUES (?, ?)`,
+                                            [scheduleId, day],
+                                            dayError => {
+                                                if (dayError) {
+                                                    return db.run(
+                                                        'ROLLBACK',
+                                                        () => next(dayError)
+                                                    );
+                                                }
+
+                                                currentDay++;
+                                                insertNextDay();
+                                            }
+                                        );
+                                    };
+
+                                    insertNextDay();
+                                }
+                            );
+                        }
+                    );
+                }
+            );
+        }
+    );
+};
+
+
 // Get all towns
 const getTowns = (req, res, next) => {
     db.all(
@@ -1312,6 +1622,9 @@ const deactivateVehicle = (req, res) => {
 
 
 module.exports = {
+    getSchedules,
+    getScheduleById,
+    createSchedule,
     getTowns,
     getTerminals,
     getRoutes,
@@ -1328,5 +1641,5 @@ module.exports = {
     deactivateRoute,
     createVehicle,
     updateVehicle,
-    deactivateVehicle
+    deactivateVehicle,
 };
