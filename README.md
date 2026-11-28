@@ -9,16 +9,16 @@ SakayTime is a frontend transportation information system for routes, schedules,
 ## Technologies Used
 
 - React
-- Vite
+- esbuild
 - HTML
 - CSS
 - JavaScript
 
 ## Project Structure
 
-- `index.html` - Vite HTML entry point
-- `src/main.jsx` - React application entry point
-- `src/App.jsx` - SakayTime homepage
+- `index.html` - Main HTML entry point served by Express
+- `src/index.js` - React application entry point
+- `src/App.js` - SakayTime homepage
 - `src/index.css` - Consolidated application styles
 - `src/components/auth/` - Authentication dialog components
 - `public/` - Static frontend assets
@@ -32,9 +32,9 @@ SakayTime is a frontend transportation information system for routes, schedules,
 
 2. Start the development server:
 
-   npm run dev
+   npm start
 
-3. Open the Vite URL shown in the terminal.
+3. Open http://localhost:5000 in your browser.
 
 ## Production
 
